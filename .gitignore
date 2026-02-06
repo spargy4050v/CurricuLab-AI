@@ -1,0 +1,36 @@
+# Add .env file (contains API keys)
+.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# ChromaDB vector store (can be regenerated)
+data/vector_db/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Generated PDFs (optional - comment out if you want to keep them)
+*.pdf
+
+# Logs
+*.log
