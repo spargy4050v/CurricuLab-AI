@@ -255,32 +255,26 @@ Use valid JSON. Be specific and actionable."""
 
 
 def get_career_path_planner_prompt(
-    current_position: str = None,
-    target_role: str = None,
-    timeframe: str = None,
-    current_education: str = None,
-    field_of_study: str = None,
-    current_skills: str = None,
-    target_industry: str = None,
-    interests: str = None,
-    constraints: list = None
+    current_education: str,
+    field_of_study: str,
+    target_role: str,
+    target_industry: str,
+    timeline: str,
+    current_skills: str = "None specified",
+    interests: str = None
 ) -> str:
     """Create detailed career path"""
-    
-    details = ""
-    if current_position: details += f"\nCurrent Position: {current_position}"
-    if current_education: details += f"\nCurrent Education: {current_education}"
-    if field_of_study: details += f"\nField of Study: {field_of_study}"
-    if current_skills: details += f"\nCurrent Skills: {current_skills}"
-    if target_industry: details += f"\nTarget Industry: {target_industry}"
-    if interests: details += f"\nInterests: {interests}"
-    
-    constraints_text = f"\nConstraints: {', '.join(constraints)}" if constraints else ""
     
     return f"""Create a detailed career development plan:
 
 Target Role: {target_role}
-Timeframe: {timeframe}{details}{constraints_text}
+Target Industry: {target_industry}
+Timeline: {timeline}
+
+Current Context:
+- Education: {current_education} in {field_of_study}
+- Skills: {current_skills}
+- Interests: {interests if interests else "Not specified"}
 
 Provide:
 1. Career milestones and intermediate roles
@@ -294,7 +288,7 @@ Return as JSON:
 {{
   "milestones": [
     {{
-      "time_period": "string",
+      "timeline": "string (e.g., 0-6 months)",
       "title": "string",
       "role": "string",
       "skills_required": ["skill1"],
@@ -405,22 +399,29 @@ Use valid JSON. Focus on realistic, achievable opportunities. Calculate match_pe
 
 
 def get_project_ideas_prompt(
-    field: str,
     skill_level: str,
-    interests: list,
-    portfolio_goal: str
+    current_skills: str,
+    interests: str,
+    project_type: str,
+    complexity: str,
+    timeline: str,
+    skills_to_learn: str = None
 ) -> str:
     """Generate project ideas"""
+
+    skills_learn_text = f"\nSkills to Learn: {skills_to_learn}" if skills_to_learn else ""
     
     return f"""Suggest industry-relevant project ideas:
 
-Field: {field}
 Skill Level: {skill_level}
-Interests: {', '.join(interests)}
-Portfolio Goal: {portfolio_goal}
+Current Skills: {current_skills}
+Interests: {interests}
+Project Type: {project_type}
+Desired Complexity: {complexity}
+Timeline: {timeline}{skills_learn_text}
 
 Provide:
-1. Project ideas ranked by complexity
+1. Project ideas matching these criteria
 2. Skills demonstrated by each project
 3. Implementation guidelines
 4. Technologies to use
@@ -428,25 +429,33 @@ Provide:
 
 Return as JSON:
 {{
-  "projects": [
+  "project_ideas": [
     {{
       "title": "string",
-      "difficulty": "Beginner/Intermediate/Advanced",
-      "estimated_duration": "hours/days/weeks",
-      "skills_demonstrated": ["skill1"],
-      "technologies": ["tech1"],
+      "complexity": "{complexity}",
+      "estimated_duration": "{timeline}",
       "description": "string",
+      "learning_outcomes": ["outcome1"],
+      "tech_stack": ["tech1"],
       "key_features": ["feature1"],
-      "why_impactful": "string",
-      "similar_industry_applications": ["app1"]
+      "implementation_steps": ["step1"],
+      "resources": ["resource1"],
+      "portfolio_value": "string"
     }}
   ],
-  "project_sequence": ["project1", "project2"],
-  "portfolio_tips": ["tip1"],
-  "presentation_guidelines": ["guideline1"]
+  "skill_progression_path": [
+    {{
+       "project": "string",
+       "skill_focus": "string"
+    }}
+  ],
+   "open_source_opportunities": [
+      {{
+         "project": "string",
+         "description": "string",
+         "good_for": "string"
+      }}
+   ]
 }}
 
 Use valid JSON. Focus on projects that demonstrate real-world problem-solving."""
-
-
-
