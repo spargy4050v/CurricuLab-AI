@@ -31,9 +31,6 @@ col1, col2, col3 = st.columns(3, gap="large")
 with col1:
     if st.button("Course Structure Generator", key="course_structure", use_container_width=True, help="Generate comprehensive course structures"):
         st.switch_page("pages/Professor_Course_Structure_Generator.py")
-    
-    if st.button("Curriculum Optimization", key="curriculum_opt", use_container_width=True, help="Optimize existing curricula"):
-        st.switch_page("pages/Professor_Curriculum_Optimization.py")
 
 with col2:
     if st.button("Learning Outcome Mapping", key="outcome_mapping", use_container_width=True, help="Map content to learning outcomes"):
@@ -45,6 +42,3 @@ with col2:
 with col3:
     if st.button("Industry Alignment Analysis", key="industry_align", use_container_width=True, help="Align with industry demands"):
         st.switch_page("pages/Professor_Industry_Alignment_Analysis.py")
-    
-    if st.button("Prerequisite Analysis", key="prereq", use_container_width=True, help="Structure course prerequisites"):
-        st.switch_page("pages/Professor_Prerequisite_Analysis.py")

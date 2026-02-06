@@ -31,9 +31,6 @@ col1, col2, col3 = st.columns(3, gap="large")
 with col1:
     if st.button("Skill Gap Analysis", key="skill_gap", use_container_width=True, help="Identify skill gaps and get recommendations"):
         st.switch_page("pages/Student_Skill_Gap_Analysis.py")
-    
-    if st.button("Course Prerequisites", key="prereq", use_container_width=True, help="Explore prerequisites for your career path"):
-        st.switch_page("pages/Student_Course_Prerequisites.py")
 
 with col2:
     if st.button("Job Opportunities", key="jobs", use_container_width=True, help="Discover relevant job opportunities"):
@@ -45,6 +42,3 @@ with col2:
 with col3:
     if st.button("Career Path Planner", key="career", use_container_width=True, help="Map out your career trajectory"):
         st.switch_page("pages/Student_Career_Path_Planner.py")
-    
-    if st.button("Industry Tools & Tech", key="tools", use_container_width=True, help="Stay updated with latest technologies"):
-        st.switch_page("pages/Student_Industry_Tools.py")
