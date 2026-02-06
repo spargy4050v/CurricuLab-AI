@@ -60,58 +60,97 @@ Use valid JSON only. Each course should align with industry standards and pedago
 
 
 def get_learning_outcome_mapping_prompt(
-    course_content: str,
-    competency_framework: str,
-    academic_level: str
+    course_name: str,
+    program_type: str,
+    course_level: str,
+    credit_hours: int,
+    topics_covered: str,
+    accreditation_framework: str,
+    existing_outcomes: str = None
 ) -> str:
     """Map course content to learning outcomes"""
     
-    return f"""You are an academic assessment expert. Map the following course content to specific learning outcomes using {competency_framework} framework.
+    existing_text = f"\nExisting Outcomes: {existing_outcomes}" if existing_outcomes else ""
+    
+    return f"""You are an academic assessment expert. Map following course content to learning outcomes using {accreditation_framework}.
 
-Course Content:
-{course_content}
+Course: {course_name}
+Program: {program_type}
+Level: {course_level} ({credit_hours} credits)
 
-Academic Level: {academic_level}
+Topics Covered:
+{topics_covered}{existing_text}
 
 Generate learning outcome mappings with:
-1. Specific, measurable learning outcomes (using Bloom's taxonomy)
-2. Alignment with competency framework
+1. Specific, measurable learning outcomes (CLOs)
+2. Alignment with {accreditation_framework}
 3. Assessment methods for each outcome
-4. Rubrics and evaluation criteria
+4. Teaching strategies to achieve outcomes
 
 Return as JSON:
 {{
-  "framework": "{competency_framework}",
   "learning_outcomes": [
     {{
-      "outcome_id": "LO1",
-      "description": "Students will be able to...",
-      "cognitive_level": "Apply/Analyze/Create",
-      "content_mapping": ["Topic X", "Topic Y"],
-      "assessment_methods": ["method1"],
-      "evaluation_criteria": ["criteria1"]
+      "clo_number": 1,
+      "outcome_statement": "string",
+      "blooms_level": "Apply/Analyze/Create",
+      "assessment_method": "string"
     }}
   ],
-  "alignment_score": "High/Medium/Low",
-  "recommendations": ["recommendation1"]
+  "topic_outcome_mapping": [
+    {{
+       "topic": "string",
+       "clos": [1, 2],
+       "teaching_strategies": ["strategy1"]
+    }}
+  ],
+  "program_outcome_mapping": [
+     {{
+        "po_code": "PO1",
+        "po_description": "string",
+        "mapped_clos": [1],
+        "mapping_strength": "High/Medium/Low"
+     }}
+  ],
+  "assessment_strategy": [
+     {{
+        "assessment_type": "string",
+        "weightage": 20,
+        "evaluates_clos": [1, 2],
+        "description": "string"
+     }}
+  ],
+  "accreditation_alignment": [
+     {{
+        "framework": "{accreditation_framework}",
+        "standards_met": ["standard1"],
+        "gaps": ["gap1"]
+     }}
+  ]
 }}
 
-Use valid JSON. Ensure outcomes are SMART (Specific, Measurable, Achievable, Relevant, Time-bound)."""
+Use valid JSON. Ensure outcomes are SMART."""
 
 
 
 
 
 def get_industry_alignment_prompt(
-    curriculum_area: str,
-    target_industry: str,
-    job_roles: list = None
+    program_name: str,
+    specialization: str,
+    core_courses: str,
+    target_industries: str,
+    geographic_region: str,
+    elective_courses: str = None
 ) -> str:
     """Analyze industry alignment"""
     
-    roles_text = f" for roles: {', '.join(job_roles)}" if job_roles else ""
+    electives_text = f"\nElective Courses: {elective_courses}" if elective_courses else ""
     
-    return f"""You are an industry-academic liaison expert. Analyze how well a {curriculum_area} curriculum aligns with {target_industry} industry needs{roles_text}.
+    return f"""You are an industry-academic liaison expert. Analyze how well a {program_name} ({specialization}) aligns with {target_industries} industry needs in {geographic_region}.
+
+Core Courses:
+{core_courses}{electives_text}
 
 Provide:
 1. Current industry skill demands
@@ -123,74 +162,126 @@ Provide:
 
 Return as JSON:
 {{
-  "industry_skills_required": [
+  "overall_alignment_score": 85,
+  "technical_alignment": 80,
+  "tools_alignment": 70,
+  "industry_skill_demands": [
     {{
       "skill": "string",
-      "importance": "Critical/High/Medium",
-      "current_coverage": "Yes/Partial/No"
+      "demand_level": "High/Medium/Low",
+      "trend": "Rising/Stable/Declining",
+      "salary_impact": "High/Medium/Low"
     }}
   ],
-  "gaps_identified": ["gap1"],
-  "emerging_trends": ["trend1"],
-  "recommended_additions": [
+  "curriculum_coverage": [
     {{
-      "topic": "string",
-      "rationale": "string",
-      "suggested_duration": "hours/weeks"
+       "skill_area": "string",
+       "coverage_status": "Covered/Partially Covered/Missing",
+       "courses_covering": ["course1"],
+       "gaps": "string"
     }}
   ],
-  "industry_tools": ["tool1"],
-  "certifications": ["cert1"],
-  "project_recommendations": ["project1"]
+  "missing_critical_skills": [
+    {{
+       "skill": "string",
+       "importance": "Critical/High",
+       "recommendation": "string"
+    }}
+  ],
+  "emerging_technologies": [
+    {{
+       "technology": "string",
+       "adoption_stage": "Early/Growth/Mature",
+       "relevance": "High/Medium",
+       "suggested_action": "Integrate/Workshop/Elective"
+    }}
+  ],
+  "recommendations": [
+    {{
+      "recommendation": "string",
+      "priority": "High/Medium/Low",
+      "implementation_effort": "Low/Medium/High",
+      "expected_impact": "string"
+    }}
+  ]
 }}
 
 Use valid JSON. Base recommendations on current 2024-2026 industry standards."""
 
 
 def get_topic_recommendations_prompt(
-    subject_area: str,
-    current_topics: list,
-    target_audience: str,
-    timeframe: str = "next 2 years"
+    course_name: str,
+    course_level: str,
+    current_topics: str,
+    field: str,
+    update_goals: str,
+    student_background: str = None
 ) -> str:
     """Generate topic recommendations"""
     
-    return f"""You are a subject matter expert in {subject_area}. Recommend new topics that should be incorporated into the curriculum for {target_audience} relevant for {timeframe}.
+    background = f"\nStudent Background: {student_background}" if student_background else ""
+    
+    return f"""You are a subject matter expert in {field}. Recommend changes to the curriculum for:
 
-Current Topics: {', '.join(current_topics)}
+Course: {course_name}
+Level: {course_level}
+Current Topics: {current_topics}
+Goals: {update_goals}{background}
 
 Provide:
 1. Emerging topics in the field
-2. Topics gaining industry traction
+2. Topics that can be removed or updated
 3. Foundational topics that may be missing
-4. Advanced topics for differentiation
-5. Interdisciplinary topics for broader learning
+4. Suggested sequence for topics
+5. Alignment with latest industry trends
 
 Return as JSON:
 {{
-  "recommended_topics": [
+  "topics_to_add": [
     {{
-      "topic_name": "string",
-      "category": "Emerging/Foundational/Advanced/Interdisciplinary",
-      "relevance_score": 1-10,
+      "topic": "string",
       "rationale": "string",
-      "prerequisites": ["prereq1"],
-      "suggested_duration": "hours",
-      "industry_demand": "High/Medium/Low",
-      "learning_resources": ["resource1"]
+      "priority": "High/Medium/Low",
+      "suggested_duration": "string",
+      "learning_outcomes": ["outcome1"],
+      "teaching_resources": ["resource1"]
     }}
   ],
   "topics_to_update": [
     {{
-      "current_topic": "string",
-      "suggested_updates": "string"
+      "topic": "string",
+      "current_status": "string",
+      "suggested_update": "string",
+      "reason": "string"
     }}
   ],
-  "topics_to_remove": ["topic1"],
-  "implementation_priority": ["topic1", "topic2", "topic3"]
+  "topics_to_remove": [
+      {{
+          "topic": "string",
+          "reason": "string",
+          "alternative": "string"
+      }}
+  ],
+  "topic_sequence": [
+      {{
+          "topic": "string",
+          "duration": "string",
+          "builds_on": "string"
+      }}
+  ],
+  "emerging_trends": [
+      {{
+          "trend": "string",
+          "relevance": "High/Medium",
+          "maturity_level": "Early/Growth/Mature",
+          "recommendation": "string"
+      }}
+  ]
 }}
 
 Use valid JSON. Focus on forward-looking, industry-relevant topics."""
+
+
 
 
 
