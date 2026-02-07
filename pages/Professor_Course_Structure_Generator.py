@@ -5,6 +5,7 @@ import streamlit as st
 import json
 from src.llm.client import GeminiClient  
 from src.llm.scenario_prompts import get_course_structure_prompt
+from src.pdf.simple_generator import generate_pdf
 
 st.set_page_config(page_title="Course Structure Generator", layout="centered", initial_sidebar_state="collapsed")
 
@@ -113,10 +114,11 @@ if 'course_structure' in st.session_state:
     
     # Download
     st.markdown("---")
+    pdf_buffer = generate_pdf(structure, f"Course Structure: {structure.get('course_name', course_name)}")
     st.download_button(
-        label="Download Course Structure (JSON)",
-        data=json.dumps(structure, indent=2),
-        file_name=f"{course_name.replace(' ', '_')}_structure.json",
-        mime="application/json",
+        label="Download Course Structure (PDF)",
+        data=pdf_buffer,
+        file_name=f"{course_name.replace(' ', '_')}_structure.pdf",
+        mime="application/pdf",
         use_container_width=True
     )

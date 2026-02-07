@@ -5,6 +5,7 @@ import streamlit as st
 import json
 from src.llm.client import GeminiClient
 from src.llm.scenario_prompts import get_job_opportunities_prompt
+from src.pdf.simple_generator import generate_pdf
 
 st.set_page_config(page_title="Job Opportunities", layout="centered", initial_sidebar_state="collapsed")
 
@@ -162,10 +163,11 @@ if 'job_opportunities' in st.session_state:
                 st.markdown(f"- {suggestion}")
     
     st.markdown("---")
+    pdf_buffer = generate_pdf(opportunities, f"Job Opportunities for {field_of_study}")
     st.download_button(
-        label="Download Job Opportunities (JSON)",
-        data=json.dumps(opportunities, indent=2),
-        file_name="job_opportunities.json",
-        mime="application/json",
+        label="Download Job Opportunities (PDF)",
+        data=pdf_buffer,
+        file_name=f"{field_of_study.replace(' ', '_')}_job_opportunities.pdf",
+        mime="application/pdf",
         use_container_width=True
     )

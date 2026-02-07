@@ -5,6 +5,7 @@ import streamlit as st
 import json
 from src.llm.client import GeminiClient
 from src.llm.scenario_prompts import get_skill_gap_analysis_prompt
+from src.pdf.simple_generator import generate_pdf
 
 st.set_page_config(page_title="Skill Gap Analysis", layout="centered", initial_sidebar_state="collapsed")
 
@@ -131,10 +132,11 @@ if 'skill_analysis' in st.session_state:
     
     # Download
     st.markdown("---")
+    pdf_buffer = generate_pdf(analysis, f"Skill Gap Analysis: {target_role if target_role else 'Student'}")
     st.download_button(
-        label="Download Skill Analysis (JSON)",
-        data=json.dumps(analysis, indent=2),
-        file_name="skill_gap_analysis.json",
-        mime="application/json",
+        label="Download Skill Analysis (PDF)",
+        data=pdf_buffer,
+        file_name="skill_gap_analysis.pdf",
+        mime="application/pdf",
         use_container_width=True
     )

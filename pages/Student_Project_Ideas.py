@@ -5,6 +5,7 @@ import streamlit as st
 import json
 from src.llm.client import GeminiClient
 from src.llm.scenario_prompts import get_project_ideas_prompt
+from src.pdf.simple_generator import generate_pdf
 
 st.set_page_config(page_title="Project Ideas", layout="centered", initial_sidebar_state="collapsed")
 
@@ -154,10 +155,11 @@ if 'project_ideas' in st.session_state:
                 st.markdown("")
     
     st.markdown("---")
+    pdf_buffer = generate_pdf(projects, f"Project Ideas for {skill_level} Level")
     st.download_button(
-        label="Download Project Ideas (JSON)",
-        data=json.dumps(projects, indent=2),
-        file_name="project_ideas.json",
-        mime="application/json",
+        label="Download Project Ideas (PDF)",
+        data=pdf_buffer,
+        file_name="project_ideas.pdf",
+        mime="application/pdf",
         use_container_width=True
     )

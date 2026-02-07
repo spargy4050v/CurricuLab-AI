@@ -5,6 +5,7 @@ import streamlit as st
 import json
 from src.llm.client import GeminiClient
 from src.llm.scenario_prompts import get_topic_recommendations_prompt
+from src.pdf.simple_generator import generate_pdf
 
 st.set_page_config(page_title="Topic Recommendations", layout="centered", initial_sidebar_state="collapsed")
 
@@ -149,10 +150,11 @@ if 'topic_recommendations' in st.session_state:
                 st.markdown("")
     
     st.markdown("---")
+    pdf_buffer = generate_pdf(recommendations, f"Topic Recommendations: {course_name}")
     st.download_button(
-        label="Download Topic Recommendations (JSON)",
-        data=json.dumps(recommendations, indent=2),
-        file_name="topic_recommendations.json",
-        mime="application/json",
+        label="Download Topic Recommendations (PDF)",
+        data=pdf_buffer,
+        file_name=f"{course_name.replace(' ', '_')}_topic_recommendations.pdf",
+        mime="application/pdf",
         use_container_width=True
     )

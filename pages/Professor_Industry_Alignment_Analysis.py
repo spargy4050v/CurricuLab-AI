@@ -5,6 +5,7 @@ import streamlit as st
 import json
 from src.llm.client import GeminiClient
 from src.llm.scenario_prompts import get_industry_alignment_prompt
+from src.pdf.simple_generator import generate_pdf
 
 st.set_page_config(page_title="Industry Alignment Analysis", layout="centered", initial_sidebar_state="collapsed")
 
@@ -169,10 +170,11 @@ if 'industry_analysis' in st.session_state:
     
     # Download
     st.markdown("---")
+    pdf_buffer = generate_pdf(analysis, f"Industry Alignment Analysis: {program_name}")
     st.download_button(
-        label="Download Industry Analysis (JSON)",
-        data=json.dumps(analysis, indent=2),
-        file_name=f"{program_name.replace(' ', '_')}_industry_analysis.json",
-        mime="application/json",
+        label="Download Industry Analysis (PDF)",
+        data=pdf_buffer,
+        file_name=f"{program_name.replace(' ', '_')}_industry_analysis.pdf",
+        mime="application/pdf",
         use_container_width=True
     )

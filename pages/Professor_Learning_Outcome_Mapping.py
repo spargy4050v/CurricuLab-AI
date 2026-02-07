@@ -5,6 +5,7 @@ import streamlit as st
 import json
 from src.llm.client import GeminiClient
 from src.llm.scenario_prompts import get_learning_outcome_mapping_prompt
+from src.pdf.simple_generator import generate_pdf
 
 st.set_page_config(page_title="Learning Outcome Mapping", layout="centered", initial_sidebar_state="collapsed")
 
@@ -149,10 +150,11 @@ if 'outcome_mapping' in st.session_state:
     
     # Download
     st.markdown("---")
+    pdf_buffer = generate_pdf(mapping, f"Learning Outcome Mapping: {course_name}")
     st.download_button(
-        label="Download Outcome Mapping (JSON)",
-        data=json.dumps(mapping, indent=2),
-        file_name=f"{course_name.replace(' ', '_')}_outcome_mapping.json",
-        mime="application/json",
+        label="Download Outcome Mapping (PDF)",
+        data=pdf_buffer,
+        file_name=f"{course_name.replace(' ', '_')}_outcome_mapping.pdf",
+        mime="application/pdf",
         use_container_width=True
     )

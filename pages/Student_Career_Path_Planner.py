@@ -5,6 +5,7 @@ import streamlit as st
 import json
 from src.llm.client import GeminiClient
 from src.llm.scenario_prompts import get_career_path_planner_prompt
+from src.pdf.simple_generator import generate_pdf
 
 st.set_page_config(page_title="Career Path Planner", layout="centered", initial_sidebar_state="collapsed")
 
@@ -161,10 +162,11 @@ if 'career_path' in st.session_state:
     
     # Download
     st.markdown("---")
+    pdf_buffer = generate_pdf(career_path, f"Career Path Roadmap: {target_role}")
     st.download_button(
-        label="Download Career Path (JSON)",
-        data=json.dumps(career_path, indent=2),
-        file_name="career_path_plan.json",
-        mime="application/json",
+        label="Download Career Path (PDF)",
+        data=pdf_buffer,
+        file_name=f"{target_role.replace(' ', '_')}_career_path.pdf",
+        mime="application/pdf",
         use_container_width=True
     )
